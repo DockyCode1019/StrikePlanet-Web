@@ -1,0 +1,1012 @@
+<!doctype html>
+<html lang="hu" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StrikePlanet - Minecraft Szerver</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&amp;family=Exo+2:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #0a1628 0%, #0d2818 25%, #061220 50%, #0a2015 75%, #050d15 100%);
+      background-attachment: fixed;
+    }
+    
+    .glow-text {
+      text-shadow: 0 0 20px rgba(34, 197, 94, 0.5), 0 0 40px rgba(34, 197, 94, 0.3);
+    }
+    
+    .card-glow {
+      box-shadow: 0 0 30px rgba(34, 197, 94, 0.1), inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+    
+    .pulse-dot {
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.1); }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .float-animation {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    
+    .shimmer-btn {
+      background: linear-gradient(90deg, #22c55e 0%, #10b981 25%, #34d399 50%, #10b981 75%, #22c55e 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s linear infinite;
+    }
+    
+    .grid-pattern {
+      background-color: transparent;
+      background-image: 
+        linear-gradient(rgba(34, 197, 94, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34, 197, 94, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      background-attachment: fixed;
+    }
+    
+    .news-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(34, 197, 94, 0.2);
+    }
+    
+    .copy-notification {
+      animation: fadeInOut 2s ease-in-out forwards;
+    }
+    
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateY(10px); }
+      15% { opacity: 1; transform: translateY(0); }
+      85% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-10px); }
+    }
+
+    .app-wrapper {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      width: 100%;
+    }
+
+    .content-area {
+      flex: 1;
+      overflow-y: auto;
+      width: 100%;
+    }
+
+    .page-section {
+      display: none;
+      width: 100%;
+      min-height: 100%;
+      padding: 40px 20px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .page-section.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .footer-sticky {
+      border-top: 1px solid rgba(34, 197, 94, 0.1);
+      padding: 32px 20px;
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .gamemode-card {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .gamemode-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 50px rgba(34, 197, 94, 0.3);
+    }
+
+    .gamemode-card.selected {
+      border-color: #22c55e;
+      box-shadow: 0 0 30px rgba(34, 197, 94, 0.5);
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full w-full text-white" style="background: linear-gradient(135deg, #0a1628 0%, #0d2818 25%, #061220 50%, #0a2015 75%, #050d15 100%); background-attachment: fixed;">
+  <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(rgba(34, 197, 94, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(34, 197, 94, 0.03) 1px, transparent 1px); background-size: 50px 50px;"></div>
+  <div class="app-wrapper relative z-10"><!-- Navigation -->
+   <nav class="w-full px-6 py-4 flex items-center justify-between border-b border-green-500/10 bg-black/30 backdrop-blur-sm sticky top-0 z-50">
+    <div class="flex items-center gap-3">
+     <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center float-animation">
+      <svg width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+       <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon> <line x1="12" y1="22" x2="12" y2="15.5"></line> <polyline points="22 8.5 12 15.5 2 8.5"></polyline>
+      </svg>
+     </div><span class="text-2xl font-bold tracking-wider glow-text" style="font-family: 'Orbitron', sans-serif;" id="nav-title">STRIKEPLANET</span>
+    </div>
+    <div class="nav-links"><button onclick="showSection('home')" class="nav-link text-gray-300 hover:text-green-400 transition-colors font-medium" style="font-family: 'Exo 2', sans-serif;">Kezdőlap</button> <button onclick="showSection('gamemodes')" class="nav-link text-gray-300 hover:text-green-400 transition-colors font-medium" style="font-family: 'Exo 2', sans-serif;">Játékmódok</button> <button onclick="showSection('news')" class="nav-link text-gray-300 hover:text-green-400 transition-colors font-medium" style="font-family: 'Exo 2', sans-serif;">Hírek</button> <button onclick="showSection('rules')" class="nav-link text-gray-300 hover:text-green-400 transition-colors font-medium" style="font-family: 'Exo 2', sans-serif;">Szabályzat</button> <button onclick="showSection('store')" class="nav-link text-gray-300 hover:text-green-400 transition-colors font-medium" style="font-family: 'Exo 2', sans-serif;">Bolt</button> <button id="profile-nav-btn" onclick="showSection('profile')" class="nav-link text-gray-300 hover:text-green-400 transition-colors font-medium hidden" style="font-family: 'Exo 2', sans-serif;">Profil</button>
+    </div>
+    <div id="user-status" class="flex items-center gap-3"><button onclick="openLogin()" class="px-5 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white font-bold transition-colors" style="font-family: 'Exo 2', sans-serif;"> BEJELENTKEZÉS </button> <button onclick="openRegister()" class="px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold transition-colors" style="font-family: 'Exo 2', sans-serif;"> REGISZTRÁCIÓ </button>
+    </div>
+    <div id="user-profile" class="hidden flex items-center gap-3">
+     <button onclick="showSection('profile')" class="px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold transition-colors flex items-center gap-2" style="font-family: 'Exo 2', sans-serif;">
+      <svg width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /> <circle cx="12" cy="7" r="4"></circle>
+      </svg><span id="profile-username-top">Felhasználó</span> </button> <button onclick="handleLogout()" class="px-5 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white font-bold transition-colors" style="font-family: 'Exo 2', sans-serif;"> KIJELENTKEZÉS </button>
+    </div>
+   </nav><!-- Content Area -->
+   <div class="content-area gradient-bg grid-pattern"><!-- Home Section -->
+    <section id="home-section" class="page-section active">
+     <div class="max-w-4xl mx-auto text-center">
+      <!-- Hero -->
+      <div class="mb-12">
+       <div class="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center float-animation card-glow">
+        <svg width="48" height="48" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+         <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon> <line x1="12" y1="22" x2="12" y2="15.5"></line> <polyline points="22 8.5 12 15.5 2 8.5"></polyline>
+        </svg>
+       </div>
+       <h1 class="text-5xl md:text-7xl font-black mb-4 glow-text" style="font-family: 'Orbitron', sans-serif;" id="hero-title">STRIKEPLANET</h1>
+       <p class="text-xl text-gray-400 mb-2" style="font-family: 'Exo 2', sans-serif;" id="hero-subtitle">🎮 Minecraft Szerver</p>
+       <p class="text-lg text-emerald-400" style="font-family: 'Exo 2', sans-serif;" id="hero-tagline">A legjobb magyar Minecraft közösség</p>
+      </div><!-- Server Status -->
+      <div class="bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-green-500/20 card-glow mb-12">
+       <div class="flex items-center justify-center gap-3 mb-6">
+        <span class="w-3 h-3 bg-green-500 rounded-full pulse-dot"></span> <span class="text-green-400 font-semibold text-lg" style="font-family: 'Exo 2', sans-serif;" id="server-status">ONLINE</span>
+       </div>
+       <div class="flex flex-col md:flex-row items-center justify-center gap-8 mb-6">
+        <div class="text-center">
+         <p class="text-gray-500 text-sm uppercase tracking-wider mb-1" style="font-family: 'Exo 2', sans-serif;">Regisztrált Játékosok</p>
+         <p class="text-3xl font-bold text-white" style="font-family: 'Orbitron', sans-serif;" id="player-count">0</p>
+        </div>
+        <div class="hidden md:block w-px h-12 bg-green-500/20"></div>
+        <div class="text-center">
+         <p class="text-gray-500 text-sm uppercase tracking-wider mb-1" style="font-family: 'Exo 2', sans-serif;">Verzió</p>
+         <p class="text-3xl font-bold text-white" style="font-family: 'Orbitron', sans-serif;" id="server-version">1.20.4</p>
+        </div>
+       </div>
+       <div class="bg-black/50 rounded-xl p-4 border border-green-500/10">
+        <p class="text-gray-500 text-sm uppercase tracking-wider mb-2" style="font-family: 'Exo 2', sans-serif;">Szerver IP</p>
+        <div class="flex items-center justify-center gap-3">
+         <code class="text-2xl text-green-400 font-mono" id="server-ip">play.strikeplanet.hu</code> <button onclick="copyIP()" class="p-2 rounded-lg bg-green-500/20 hover:bg-green-500/30 transition-colors" title="IP másolása">
+          <svg width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400">
+           <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect> <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+          </svg></button>
+        </div>
+       </div>
+      </div><!-- Features Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+       <div class="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-green-500/20 hover:border-green-500/40 transition-all">
+        <div class="w-12 h-12 mx-auto mb-4 rounded-lg bg-green-500/20 flex items-center justify-center">
+         <svg width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-400">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+         </svg>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2" style="font-family: 'Orbitron', sans-serif;">Anti-Cheat</h3>
+        <p class="text-gray-400 text-sm" style="font-family: 'Exo 2', sans-serif;">Fejlett védelmi rendszer a tiszta játékélményért</p>
+       </div>
+       <div class="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-green-500/20 hover:border-green-500/40 transition-all">
+        <div class="w-12 h-12 mx-auto mb-4 rounded-lg bg-green-500/20 flex items-center justify-center">
+         <svg width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-400">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+         </svg>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2" style="font-family: 'Orbitron', sans-serif;">Gyors Szerverek</h3>
+        <p class="text-gray-400 text-sm" style="font-family: 'Exo 2', sans-serif;">Alacsony ping és folyamatos 20 TPS</p>
+       </div>
+       <div class="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-green-500/20 hover:border-green-500/40 transition-all">
+        <div class="w-12 h-12 mx-auto mb-4 rounded-lg bg-green-500/20 flex items-center justify-center">
+         <svg width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-400">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /> <circle cx="9" cy="7" r="4"></circle> <path d="M23 21v-2a4 4 0 0 0-3-3.87" /> <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+         </svg>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-2" style="font-family: 'Orbitron', sans-serif;">Aktív Közösség</h3>
+        <p class="text-gray-400 text-sm" style="font-family: 'Exo 2', sans-serif;">Barátságos játékosok és segítőkész staff</p>
+       </div>
+      </div>
+     </div>
+    </section><!-- Game Modes Section -->
+    <section id="gamemodes-section" class="page-section">
+     <div class="max-w-6xl mx-auto w-full">
+      <h2 class="text-4xl font-black text-center mb-12 glow-text" style="font-family: 'Orbitron', sans-serif;">JÁTÉKMÓDOK</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="gamemodes-grid">
+       <!-- Game modes will be rendered here -->
+      </div>
+      <div class="mt-12 bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-green-500/20 card-glow">
+       <h3 class="text-2xl font-bold text-center mb-6 text-green-400" style="font-family: 'Orbitron', sans-serif;">Játékmód Javaslása</h3>
+       <div class="flex gap-3 mb-4">
+        <input type="text" id="gamemode-input" placeholder="Játékmód javaslatod..." class="flex-1 bg-black/50 border border-green-500/30 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-green-500" style="font-family: 'Exo 2', sans-serif;"> <button onclick="suggestGameMode()" class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition-colors" style="font-family: 'Exo 2', sans-serif;">KÜLDÉS</button>
+       </div>
+       <p class="text-gray-400 text-sm text-center" style="font-family: 'Exo 2', sans-serif;">Javasold új játékmódokat a szerverhez!</p>
+       <div id="suggestion-message" class="hidden mt-4 p-3 bg-green-500/20 border border-green-500/50 rounded-lg text-center text-green-400" style="font-family: 'Exo 2', sans-serif;">
+        ✓ Köszönjük a javaslatot!
+       </div>
+      </div>
+     </div>
+    </section><!-- News Section -->
+    <section id="news-section" class="page-section">
+     <div class="max-w-4xl mx-auto w-full">
+      <h2 class="text-4xl font-black text-center mb-8 glow-text" style="font-family: 'Orbitron', sans-serif;">HÍREK</h2>
+      <div class="space-y-6" id="news-container">
+       <!-- News items will be rendered here -->
+      </div>
+     </div>
+    </section><!-- Rules Section -->
+    <section id="rules-section" class="page-section">
+     <div class="max-w-4xl mx-auto w-full">
+      <h2 class="text-4xl font-black text-center mb-8 glow-text" style="font-family: 'Orbitron', sans-serif;">SZABÁLYZAT</h2>
+      <div class="bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-green-500/20 card-glow">
+       <div class="space-y-6" id="rules-content">
+        <div class="border-b border-green-500/10 pb-4">
+         <h3 class="text-xl font-bold text-green-400 mb-2" style="font-family: 'Orbitron', sans-serif;">1. Általános szabályok</h3>
+         <ul class="space-y-2 text-gray-300" style="font-family: 'Exo 2', sans-serif;">
+          <li>• Tiszteld a többi játékost és a staff tagokat</li>
+          <li>• Tilos a spam és a reklámozás</li>
+          <li>• Magyar nyelvű kommunikáció az elsődleges</li>
+         </ul>
+        </div>
+        <div class="border-b border-green-500/10 pb-4">
+         <h3 class="text-xl font-bold text-green-400 mb-2" style="font-family: 'Orbitron', sans-serif;">2. Játék szabályok</h3>
+         <ul class="space-y-2 text-gray-300" style="font-family: 'Exo 2', sans-serif;">
+          <li>• Tilos bármilyen cheat vagy hack használata</li>
+          <li>• Nem engedélyezett a bug kihasználás</li>
+          <li>• Griefing és lopás szigorúan tilos</li>
+         </ul>
+        </div>
+        <div class="border-b border-green-500/10 pb-4">
+         <h3 class="text-xl font-bold text-green-400 mb-2" style="font-family: 'Orbitron', sans-serif;">3. Chat szabályok</h3>
+         <ul class="space-y-2 text-gray-300" style="font-family: 'Exo 2', sans-serif;">
+          <li>• Tilos a káromkodás és sértő tartalom</li>
+          <li>• Személyes adatok megosztása nem ajánlott</li>
+          <li>• Caps lock használata kerülendő</li>
+         </ul>
+        </div>
+        <div>
+         <h3 class="text-xl font-bold text-green-400 mb-2" style="font-family: 'Orbitron', sans-serif;">4. Büntetések</h3>
+         <ul class="space-y-2 text-gray-300" style="font-family: 'Exo 2', sans-serif;">
+          <li>• 1. figyelmeztetés: Szóbeli figyelmeztetés</li>
+          <li>• 2. figyelmeztetés: Ideiglenes mute/kick</li>
+          <li>• 3. figyelmeztetés: Ideiglenes ban</li>
+          <li>• Súlyos esetben: Végleges kitiltás</li>
+         </ul>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section><!-- Profile Section -->
+    <section id="profile-section" class="page-section">
+     <div class="max-w-4xl mx-auto w-full">
+      <h2 class="text-4xl font-black text-center mb-8 glow-text" style="font-family: 'Orbitron', sans-serif;">PROFIL</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+       <!-- Account Info Card -->
+       <div class="bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-green-500/20 card-glow">
+        <h3 class="text-2xl font-bold text-green-400 mb-6" style="font-family: 'Orbitron', sans-serif;">FIÓK ADATOK</h3>
+        <div class="space-y-4">
+         <div>
+          <p class="text-gray-500 text-sm uppercase tracking-wider mb-1" style="font-family: 'Exo 2', sans-serif;">Felhasználónév</p>
+          <p class="text-xl text-white" style="font-family: 'Exo 2', sans-serif;" id="profile-username">-</p>
+         </div>
+         <div>
+          <p class="text-gray-500 text-sm uppercase tracking-wider mb-1" style="font-family: 'Exo 2', sans-serif;">Email</p>
+          <p class="text-xl text-white" style="font-family: 'Exo 2', sans-serif;" id="profile-email">-</p>
+         </div>
+         <div>
+          <p class="text-gray-500 text-sm uppercase tracking-wider mb-1" style="font-family: 'Exo 2', sans-serif;">Fióktípus</p>
+          <p class="text-xl text-white" style="font-family: 'Exo 2', sans-serif;" id="profile-type">-</p>
+         </div>
+         <div>
+          <p class="text-gray-500 text-sm uppercase tracking-wider mb-1" style="font-family: 'Exo 2', sans-serif;">Regisztráció</p>
+          <p class="text-xl text-white" style="font-family: 'Exo 2', sans-serif;" id="profile-created">-</p>
+         </div>
+        </div>
+       </div><!-- Rank Info Card -->
+       <div class="bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-purple-500/20 card-glow">
+        <h3 class="text-2xl font-bold text-purple-400 mb-6" style="font-family: 'Orbitron', sans-serif;">JELENLEGI RANG</h3>
+        <div class="text-center">
+         <div class="w-24 h-24 mx-auto mb-4 rounded-xl bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
+          <svg width="48" height="48" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white">
+           <polygon points="12 2 15.09 10.26 24 10.35 17.18 16.54 19.34 24.81 12 18.76 4.66 24.81 6.82 16.54 0 10.35 8.91 10.26 12 2"></polygon>
+          </svg>
+         </div>
+         <p class="text-3xl font-bold text-purple-400 mb-2" style="font-family: 'Orbitron', sans-serif;" id="profile-rank">Normál</p>
+         <p class="text-gray-400 mb-6" style="font-family: 'Exo 2', sans-serif;">Fejleszd fel a rangodat, hogy extra jutalmakat kapj!</p>
+        </div>
+       </div>
+      </div><!-- Rank Shop -->
+      <div class="bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-green-500/20 card-glow">
+       <h3 class="text-2xl font-bold text-green-400 mb-6" style="font-family: 'Orbitron', sans-serif;">RANG VÁSÁRLÁS</h3>
+       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- VIP Rank -->
+        <div class="bg-black/50 rounded-xl p-6 border border-blue-500/30 text-center">
+         <div class="w-16 h-16 mx-auto mb-4 rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+          <svg width="32" height="32" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white">
+           <polygon points="12 2 15.09 10.26 24 10.35 17.18 16.54 19.34 24.81 12 18.76 4.66 24.81 6.82 16.54 0 10.35 8.91 10.26 12 2"></polygon>
+          </svg>
+         </div>
+         <h4 class="text-xl font-bold text-blue-400 mb-2" style="font-family: 'Orbitron', sans-serif;">VIP</h4>
+         <p class="text-gray-400 text-sm mb-4" style="font-family: 'Exo 2', sans-serif;">Extra parancsok és előnyök</p><button onclick="buyRank('vip')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition-colors" style="font-family: 'Exo 2', sans-serif;">VÁSÁRLÁs</button>
+        </div><!-- MVP Rank -->
+        <div class="bg-black/50 rounded-xl p-6 border border-yellow-500/30 text-center">
+         <div class="w-16 h-16 mx-auto mb-4 rounded-lg bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center">
+          <svg width="32" height="32" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white">
+           <polygon points="12 2 15.09 10.26 24 10.35 17.18 16.54 19.34 24.81 12 18.76 4.66 24.81 6.82 16.54 0 10.35 8.91 10.26 12 2"></polygon>
+          </svg>
+         </div>
+         <h4 class="text-xl font-bold text-yellow-400 mb-2" style="font-family: 'Orbitron', sans-serif;">MVP</h4>
+         <p class="text-gray-400 text-sm mb-4" style="font-family: 'Exo 2', sans-serif;">Prémium funkciók és skin</p><button onclick="buyRank('mvp')" class="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 rounded-lg transition-colors" style="font-family: 'Exo 2', sans-serif;">VÁSÁRLÁs</button>
+        </div><!-- ELITE Rank -->
+        <div class="bg-black/50 rounded-xl p-6 border border-red-500/30 text-center">
+         <div class="w-16 h-16 mx-auto mb-4 rounded-lg bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center">
+          <svg width="32" height="32" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white">
+           <polygon points="12 2 15.09 10.26 24 10.35 17.18 16.54 19.34 24.81 12 18.76 4.66 24.81 6.82 16.54 0 10.35 8.91 10.26 12 2"></polygon>
+          </svg>
+         </div>
+         <h4 class="text-xl font-bold text-red-400 mb-2" style="font-family: 'Orbitron', sans-serif;">ELITE</h4>
+         <p class="text-gray-400 text-sm mb-4" style="font-family: 'Exo 2', sans-serif;">Maximális jutalmak és status</p><button onclick="buyRank('elite')" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-lg transition-colors" style="font-family: 'Exo 2', sans-serif;">VÁSÁRLÁs</button>
+        </div>
+       </div>
+      </div><!-- Danger Zone -->
+      <div class="mt-8 bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-red-500/20">
+       <h3 class="text-2xl font-bold text-red-400 mb-4" style="font-family: 'Orbitron', sans-serif;">VESZÉLYZÓNA</h3>
+       <p class="text-gray-300 mb-6" style="font-family: 'Exo 2', sans-serif;">Ezek az akciók véglegesen befolyásolhatják a fiókodat.</p><button onclick="openDeleteConfirm()" class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-colors" style="font-family: 'Exo 2', sans-serif;">🗑️ FIÓK TÖRLÉSE</button>
+      </div>
+     </div>
+    </section><!-- Store Section -->
+    <section id="store-section" class="page-section">
+     <div class="max-w-4xl mx-auto w-full">
+      <h2 class="text-4xl font-black text-center mb-8 glow-text" style="font-family: 'Orbitron', sans-serif;">BOLT</h2>
+      <div class="bg-black/40 backdrop-blur-sm rounded-2xl p-12 border border-yellow-500/30 text-center">
+       <div class="w-20 h-20 mx-auto mb-6 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center">
+        <svg width="40" height="40" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white">
+         <line x1="12" y1="5" x2="12" y2="19"></line> <polyline points="19 12 12 19 5 12"></polyline>
+        </svg>
+       </div>
+       <h3 class="text-3xl font-bold text-yellow-400 mb-4" style="font-family: 'Orbitron', sans-serif;">ELŐLÉGEZETÉS</h3>
+       <p class="text-gray-300 text-lg" style="font-family: 'Exo 2', sans-serif;">A bolt még nem elérhető.</p>
+       <p class="text-gray-400 text-sm mt-4" style="font-family: 'Exo 2', sans-serif;">Hamarosan megnyitunk vele!</p>
+      </div>
+     </div>
+    </section>
+   </div><!-- Footer -->
+   <footer class="footer-sticky text-center bg-black">
+    <p class="text-gray-600 text-sm" style="font-family: 'Exo 2', sans-serif;" id="footer-text">© 2024 StrikePlanet. Minden jog fenntartva.</p>
+   </footer><!-- Auth Modal -->
+   <div id="auth-modal" class="modal-backdrop">
+    <div class="bg-black/90 rounded-2xl p-8 border border-green-500/30 w-full max-w-sm shadow-2xl">
+     <h2 class="text-2xl font-bold text-center mb-6 text-green-400" style="font-family: 'Orbitron', sans-serif;" id="auth-title">BEJELENTKEZÉS</h2><!-- Login Form -->
+     <div id="login-form" class="space-y-4">
+      <input type="text" id="login-username" placeholder="Felhasználónév vagy Email" class="w-full bg-black/50 border border-green-500/30 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-green-500" style="font-family: 'Exo 2', sans-serif;"> <input type="password" id="login-password" placeholder="Jelszó" class="w-full bg-black/50 border border-green-500/30 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-green-500" style="font-family: 'Exo 2', sans-serif;">
+      <div id="auth-message" class="hidden p-3 rounded-lg text-sm" style="font-family: 'Exo 2', sans-serif;"></div><button onclick="handleLogin()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition-colors" style="font-family: 'Exo 2', sans-serif;">BEJELENTKEZÉS</button> <button onclick="switchToRegister()" class="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-lg transition-colors" style="font-family: 'Exo 2', sans-serif;">Regisztrálok</button>
+     </div><!-- Register Form -->
+     <div id="register-form" class="hidden space-y-4">
+      <input type="text" id="register-username" placeholder="Felhasználónév" class="w-full bg-black/50 border border-green-500/30 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-green-500" style="font-family: 'Exo 2', sans-serif;"> <input type="email" id="register-email" placeholder="Email" class="w-full bg-black/50 border border-green-500/30 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-green-500" style="font-family: 'Exo 2', sans-serif;"> <input type="password" id="register-password" placeholder="Jelszó (min. 6 karakter)" class="w-full bg-black/50 border border-green-500/30 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-green-500" style="font-family: 'Exo 2', sans-serif;"> <input type="password" id="register-password-confirm" placeholder="Jelszó megerősítése" class="w-full bg-black/50 border border-green-500/30 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-green-500" style="font-family: 'Exo 2', sans-serif;"> <label class="flex items-center gap-3 text-gray-300" style="font-family: 'Exo 2', sans-serif;"> <input type="checkbox" id="register-bedrock" class="w-4 h-4"> Bedrock verzió is (Java + Bedrock) </label>
+      <div id="auth-message-register" class="hidden p-3 rounded-lg text-sm" style="font-family: 'Exo 2', sans-serif;"></div><button onclick="handleRegister()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition-colors" style="font-family: 'Exo 2', sans-serif;">REGISZTRÁLÁS</button> <button onclick="switchToLogin()" class="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-lg transition-colors" style="font-family: 'Exo 2', sans-serif;">Bejelentkezek</button>
+     </div><button onclick="toggleAuthModal()" class="w-full mt-4 bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-lg transition-colors" style="font-family: 'Exo 2', sans-serif;"> Bezárás </button>
+    </div>
+   </div><!-- Delete Account Confirmation Modal -->
+   <div id="delete-confirm-modal" class="modal-backdrop">
+    <div class="bg-black/90 rounded-2xl p-8 border border-red-500/30 w-full max-w-sm shadow-2xl">
+     <h2 class="text-2xl font-bold text-center mb-4 text-red-400" style="font-family: 'Orbitron', sans-serif;">FIÓK TÖRLÉSE</h2>
+     <p class="text-gray-300 text-center mb-2" style="font-family: 'Exo 2', sans-serif;">Biztosan törölni szeretnéd a fiókodat?</p>
+     <p class="text-yellow-400 text-center text-sm mb-6" style="font-family: 'Exo 2', sans-serif;">⚠️ Ez a művelet nem visszavonható! Minden adat és vásárlás eltűnik!</p>
+     <div class="flex gap-3">
+      <button onclick="cancelDelete()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-lg transition-colors" style="font-family: 'Exo 2', sans-serif;">MÉGSE</button> <button onclick="confirmDelete()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg transition-colors" style="font-family: 'Exo 2', sans-serif;">TÖRLÉS</button>
+     </div>
+    </div>
+   </div><!-- Copy Notification -->
+   <div id="copy-notification" class="fixed bottom-8 right-8 bg-green-500 text-white px-6 py-3 rounded-full font-bold hidden" style="font-family: 'Exo 2', sans-serif;">
+    ✓ IP cím másolva!
+   </div>
+   <script>
+    // Local storage for accounts (works everywhere - GitHub Pages, Canva, etc.)
+    let currentLoggedInUser = null;
+
+    class AccountManager {
+      constructor() {
+        this.storageKey = 'strikeplanet_accounts';
+        this.userSessionKey = 'strikeplanet_current_user';
+        this.loadAccounts();
+        this.loadSession();
+      }
+
+      loadAccounts() {
+        const stored = localStorage.getItem(this.storageKey);
+        this.accounts = stored ? JSON.parse(stored) : [];
+      }
+
+      loadSession() {
+        const stored = localStorage.getItem(this.userSessionKey);
+        if (stored) {
+          currentLoggedInUser = JSON.parse(stored);
+          this.updateUserStatus();
+        }
+      }
+
+      saveAccounts() {
+        localStorage.setItem(this.storageKey, JSON.stringify(this.accounts));
+        this.updatePlayerCount();
+      }
+
+      saveSession(user) {
+        currentLoggedInUser = user;
+        localStorage.setItem(this.userSessionKey, JSON.stringify(user));
+        this.updateUserStatus();
+      }
+
+      clearSession() {
+        currentLoggedInUser = null;
+        localStorage.removeItem(this.userSessionKey);
+        this.updateUserStatus();
+      }
+
+      updateUserStatus() {
+        const statusDiv = document.getElementById('user-status');
+        const profileDiv = document.getElementById('user-profile');
+        const profileNavBtn = document.getElementById('profile-nav-btn');
+        
+        if (currentLoggedInUser) {
+          statusDiv.classList.add('hidden');
+          profileDiv.classList.remove('hidden');
+          profileNavBtn.classList.remove('hidden');
+          document.getElementById('profile-username-top').textContent = currentLoggedInUser.username;
+        } else {
+          statusDiv.classList.remove('hidden');
+          profileDiv.classList.add('hidden');
+          profileNavBtn.classList.add('hidden');
+        }
+      }
+
+      addAccount(account) {
+        this.accounts.push({
+          ...account,
+          id: Date.now().toString(),
+          rank: null
+        });
+        this.saveAccounts();
+      }
+
+      getAccountCount() {
+        return this.accounts.length;
+      }
+
+      updatePlayerCount() {
+        document.getElementById('player-count').textContent = this.getAccountCount();
+      }
+
+      findAccount(username, email) {
+        return this.accounts.find(acc => acc.username === username || acc.email === email);
+      }
+
+      updateAccountRank(username, rank) {
+        const account = this.accounts.find(acc => acc.username === username);
+        if (account) {
+          account.rank = rank;
+          this.saveAccounts();
+          if (currentLoggedInUser && currentLoggedInUser.username === username) {
+            currentLoggedInUser.rank = rank;
+            this.saveSession(currentLoggedInUser);
+          }
+        }
+      }
+    }
+
+    const accountManager = new AccountManager();
+
+    // Default configuration
+    const defaultConfig = {
+      site_title: 'STRIKEPLANET',
+      hero_subtitle: '🎮 Minecraft Szerver',
+      hero_tagline: 'A legjobb magyar Minecraft közösség',
+      server_ip: 'play.strikeplanet.hu',
+      server_version: '1.20.1',
+      footer_text: '© 2026 StrikePlanet. Minden jog fenntartva.',
+      background_color: '#0a1628',
+      surface_color: '#000000',
+      text_color: '#ffffff',
+      primary_color: '#22c55e',
+      secondary_color: '#9ca3af'
+    };
+
+    // Game modes data
+    let gameModes = [
+      { id: 1, name: 'Survival Rank' },
+      { id: 2, name: 'Annihilation' },
+      { id: 3, name: 'KitPvP' },
+      { id: 4, name: 'Murder Mystery' }
+    ];
+
+    // Static news data
+    const newsData = [
+      {
+        id: '1',
+        title: '🎄 Karácsonyi Event!',
+        date: '2024. December 20.',
+        content: 'Ünnepeld velünk a karácsonyt! Exkluzív jutalmak, téli térkép és különleges küldetések várnak. Ne maradj le a limitált skinekről!'
+      },
+      {
+        id: '2',
+        title: '⚔️ Új PvP Aréna',
+        date: '2024. December 15.',
+        content: 'Megnyitottuk az új rangsorolt PvP arénát! Küzdj meg a legjobb játékosokkal és szerezz exkluzív jutalmakat a ranglistán.'
+      },
+      {
+        id: '3',
+        title: '🏰 Survival Reset',
+        date: '2024. December 1.',
+        content: 'Friss kezdet a survival világban! Új térkép, új lehetőségek. Minden játékos tiszta lappal indulhat az új szezonban.'
+      }
+    ];
+
+    // Render game modes
+    function renderGameModes() {
+      const container = document.getElementById('gamemodes-grid');
+      container.innerHTML = gameModes.map(mode => `
+        <div class="gamemode-card bg-black/40 backdrop-blur-sm rounded-2xl p-6 border border-green-500/20 hover:border-green-500/40 transition-all" onclick="selectGameMode(this)">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white">
+              <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon>
+              <line x1="12" y1="22" x2="12" y2="15.5"></line>
+              <polyline points="22 8.5 12 15.5 2 8.5"></polyline>
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-green-400 text-center" style="font-family: 'Orbitron', sans-serif;">${mode.name}</h3>
+          <p class="text-gray-400 text-sm text-center mt-2" style="font-family: 'Exo 2', sans-serif;">Kattints a kiválasztáshoz</p>
+        </div>
+      `).join('');
+    }
+
+    // Select game mode
+    function selectGameMode(element) {
+      document.querySelectorAll('.gamemode-card').forEach(card => {
+        card.classList.remove('selected');
+        card.classList.remove('border-green-500');
+      });
+      element.classList.add('selected', 'border-green-500');
+    }
+
+    // Suggest game mode
+    function suggestGameMode() {
+      const input = document.getElementById('gamemode-input');
+      const suggestion = input.value.trim();
+      
+      if (!suggestion) {
+        input.placeholder = 'Kérlek írj be egy javaslatot!';
+        return;
+      }
+      
+      const message = document.getElementById('suggestion-message');
+      message.classList.remove('hidden');
+      message.textContent = `✓ Köszönjük a javaslatot: "${suggestion}"!`;
+      
+      input.value = '';
+      
+      setTimeout(() => {
+        message.classList.add('hidden');
+      }, );
+    }
+
+    // Render news
+    function renderNews() {
+      const container = document.getElementById('news-container');
+      container.innerHTML = newsData.map(news => `
+        <div class="bg-black/40 backdrop-blur-sm rounded-2xl p-6 border border-green-500/20 news-card transition-all duration-300">
+          <div class="flex items-start justify-between mb-4">
+            <h3 class="text-xl font-bold text-green-400" style="font-family: 'Orbitron', sans-serif;">${news.title}</h3>
+            <span class="text-gray-500 text-sm" style="font-family: 'Exo 2', sans-serif;">${news.date}</span>
+          </div>
+          <p class="text-gray-300" style="font-family: 'Exo 2', sans-serif;">${news.content}</p>
+        </div>
+      `).join('');
+    }
+
+    // Section navigation
+    function showSection(section) {
+      document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+      document.getElementById(`${section}-section`).classList.add('active');
+      
+      if (section === 'gamemodes') {
+        renderGameModes();
+      } else if (section === 'profile' && currentLoggedInUser) {
+        updateProfileDisplay();
+      }
+    }
+
+    // Auth modal toggle
+    function toggleAuthModal() {
+      const modal = document.getElementById('auth-modal');
+      modal.classList.toggle('active');
+    }
+
+    function openLogin() {
+      switchToLogin();
+      toggleAuthModal();
+    }
+
+    function openRegister() {
+      switchToRegister();
+      toggleAuthModal();
+    }
+
+    // Switch to register form
+    function switchToRegister() {
+      document.getElementById('login-form').classList.add('hidden');
+      document.getElementById('register-form').classList.remove('hidden');
+      document.getElementById('auth-title').textContent = 'REGISZTRÁLÁS';
+      document.getElementById('auth-message').classList.add('hidden');
+      document.getElementById('auth-message-register').classList.add('hidden');
+    }
+
+    // Switch to login form
+    function switchToLogin() {
+      document.getElementById('register-form').classList.add('hidden');
+      document.getElementById('login-form').classList.remove('hidden');
+      document.getElementById('auth-title').textContent = 'BEJELENTKEZÉS';
+      document.getElementById('auth-message').classList.add('hidden');
+      document.getElementById('auth-message-register').classList.add('hidden');
+    }
+
+    // Handle login
+    async function handleLogin() {
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value.trim();
+      const message = document.getElementById('auth-message');
+
+      if (!username || !password) {
+        message.classList.remove('hidden');
+        message.classList.add('bg-red-500/20', 'border', 'border-red-500/50', 'text-red-400');
+        message.textContent = '⚠️ Kérlek töltsd ki az összes mezőt!';
+        return;
+      }
+
+      const account = accountManager.accounts.find(acc => 
+        (acc.username === username || acc.email === username) && acc.password === password
+      );
+
+      if (!account) {
+        message.classList.remove('hidden');
+        message.classList.add('bg-red-500/20', 'border', 'border-red-500/50', 'text-red-400');
+        message.textContent = '⚠️ Hibás felhasználónév vagy jelszó!';
+        return;
+      }
+
+      // Save session
+      accountManager.saveSession({
+        username: account.username,
+        email: account.email,
+        rank: account.rank
+      });
+
+      // Show welcome message
+      message.classList.remove('hidden', 'bg-red-500/20', 'border-red-500/50', 'text-red-400');
+      message.classList.add('bg-green-500/20', 'border', 'border-green-500/50', 'text-green-400');
+      message.textContent = `✓ Szia ${account.username}. Jó játékot!`;
+
+      setTimeout(() => {
+        toggleAuthModal();
+        document.getElementById('login-username').value = '';
+        document.getElementById('login-password').value = '';
+      }, 0);
+    }
+
+    // Handle logout
+    function handleLogout() {
+      accountManager.clearSession();
+      toggleAuthModal();
+    }
+
+    // Handle register
+    async function handleRegister() {
+      const username = document.getElementById('register-username').value.trim();
+      const email = document.getElementById('register-email').value.trim();
+      const password = document.getElementById('register-password').value.trim();
+      const passwordConfirm = document.getElementById('register-password-confirm').value.trim();
+      const bedrock = document.getElementById('register-bedrock').checked;
+      const message = document.getElementById('auth-message-register');
+
+      if (!username || !email || !password || !passwordConfirm) {
+        message.classList.remove('hidden');
+        message.classList.add('bg-red-500/20', 'border', 'border-red-500/50', 'text-red-400');
+        message.textContent = '⚠️ Kérlek töltsd ki az összes mezőt!';
+        return;
+      }
+
+      if (password !== passwordConfirm) {
+        message.classList.remove('hidden');
+        message.classList.add('bg-red-500/20', 'border', 'border-red-500/50', 'text-red-400');
+        message.textContent = '⚠️ A jelszavak nem egyeznek!';
+        return;
+      }
+
+      if (password.length < 6) {
+        message.classList.remove('hidden');
+        message.classList.add('bg-red-500/20', 'border', 'border-red-500/50', 'text-red-400');
+        message.textContent = '⚠️ A jelszó legalább 6 karakter legyen!';
+        return;
+      }
+
+      if (accountManager.findAccount(username, email)) {
+        message.classList.remove('hidden');
+        message.classList.add('bg-red-500/20', 'border', 'border-red-500/50', 'text-red-400');
+        message.textContent = '⚠️ Ez a felhasználónév vagy email már foglalt!';
+        return;
+      }
+
+      accountManager.addAccount({
+        username,
+        email,
+        password,
+        account_type: bedrock ? 'java_bedrock' : 'java',
+        created_at: new Date().toISOString()
+      });
+
+      message.classList.remove('hidden', 'bg-red-500/20', 'border-red-500/50', 'text-red-400');
+      message.classList.add('bg-green-500/20', 'border', 'border-green-500/50', 'text-green-400');
+      const bedrockText = bedrock ? ' (Java + Bedrock)' : ' (Java)';
+      message.textContent = `✓ Szia ${username}. Jó játékot!`;
+
+      // Auto-login after registration
+      accountManager.saveSession({
+        username: username,
+        email: email,
+        rank: null
+      });
+      document.getElementById('register-username').value = '';
+      document.getElementById('register-email').value = '';
+      document.getElementById('register-password').value = '';
+      document.getElementById('register-password-confirm').value = '';
+      document.getElementById('register-bedrock').checked = false;
+      toggleAuthModal();
+      showSection('profile');
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('auth-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'auth-modal') {
+        toggleAuthModal();
+      }
+    });
+
+    document.getElementById('delete-confirm-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'delete-confirm-modal') {
+        cancelDelete();
+      }
+    });
+
+    // Delete account functions
+    function openDeleteConfirm() {
+      document.getElementById('delete-confirm-modal').classList.add('active');
+    }
+
+    function cancelDelete() {
+      document.getElementById('delete-confirm-modal').classList.remove('active');
+    }
+
+    function confirmDelete() {
+      if (!currentLoggedInUser) return;
+
+      const username = currentLoggedInUser.username;
+      accountManager.accounts = accountManager.accounts.filter(acc => acc.username !== username);
+      accountManager.saveAccounts();
+      accountManager.clearSession();
+
+      const notif = document.getElementById('copy-notification');
+      notif.textContent = '✓ Fiók sikeresen törölve! Minden adat és vásárlás eltűnt.';
+      notif.classList.remove('hidden');
+      notif.classList.add('copy-notification');
+
+      document.getElementById('delete-confirm-modal').classList.remove('active');
+
+      setTimeout(() => {
+        notif.classList.add('hidden');
+        notif.classList.remove('copy-notification');
+        showSection('home');
+      }, 0);
+    }
+
+    // Copy IP function
+    function copyIP() {
+      const ip = window.elementSdk?.config?.server_ip || defaultConfig.server_ip;
+      navigator.clipboard.writeText(ip).then(() => {
+        const notification = document.getElementById('copy-notification');
+        notification.textContent = '✓ IP cím másolva!';
+        notification.classList.remove('hidden');
+        notification.classList.add('copy-notification');
+        setTimeout(() => {
+          notification.classList.add('hidden');
+          notification.classList.remove('copy-notification');
+        }, 3000);
+      });
+    }
+
+    // Buy rank function
+    function buyRank(rankName) {
+      if (!currentLoggedInUser) {
+        const notif = document.getElementById('copy-notification');
+        notif.textContent = '⚠️ Kérlek jelentkezz be a vásárláshoz!';
+        notif.classList.remove('hidden');
+        notif.classList.add('copy-notification');
+        setTimeout(() => {
+          notif.classList.add('hidden');
+          notif.classList.remove('copy-notification');
+        }, 0);
+        return;
+      }
+
+      // Disabled - rang vásárlás nem működik
+      const notif = document.getElementById('copy-notification');
+      notif.textContent = '🔒 Rang vásárlás jelenleg nem elérhető!';
+      notif.classList.remove('hidden');
+      notif.classList.add('copy-notification');
+      setTimeout(() => {
+        notif.classList.add('hidden');
+        notif.classList.remove('copy-notification');
+      }, 3000);
+    }
+
+    // Update profile display
+    function updateProfileDisplay() {
+      if (!currentLoggedInUser) return;
+
+      const account = accountManager.accounts.find(acc => acc.username === currentLoggedInUser.username);
+      if (!account) return;
+
+      let rankText = 'Normál';
+      if (account.rank === 'vip') rankText = 'VIP';
+      else if (account.rank === 'mvp') rankText = 'MVP';
+      else if (account.rank === 'elite') rankText = 'ELITE';
+
+      const accountType = account.account_type === 'java_bedrock' ? 'Java + Bedrock' : 'Java';
+      const createdDate = new Date(account.created_at).toLocaleDateString('hu-HU');
+
+      document.getElementById('profile-username').textContent = account.username;
+      document.getElementById('profile-email').textContent = account.email;
+      document.getElementById('profile-type').textContent = accountType;
+      document.getElementById('profile-rank').textContent = rankText;
+      document.getElementById('profile-created').textContent = createdDate;
+    }
+
+    // Update UI based on config
+    function updateUI(config) {
+      document.getElementById('nav-title').textContent = config.site_title || defaultConfig.site_title;
+      document.getElementById('hero-title').textContent = config.site_title || defaultConfig.site_title;
+      document.getElementById('hero-subtitle').textContent = config.hero_subtitle || defaultConfig.hero_subtitle;
+      document.getElementById('hero-tagline').textContent = config.hero_tagline || defaultConfig.hero_tagline;
+      document.getElementById('server-ip').textContent = config.server_ip || defaultConfig.server_ip;
+      document.getElementById('server-version').textContent = config.server_version || defaultConfig.server_version;
+      document.getElementById('footer-text').textContent = config.footer_text || defaultConfig.footer_text;
+
+      const primaryColor = config.primary_color || defaultConfig.primary_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const secondaryColor = config.secondary_color || defaultConfig.secondary_color;
+      
+      document.querySelectorAll('.glow-text').forEach(el => {
+        el.style.textShadow = `0 0 20px ${primaryColor}80, 0 0 40px ${primaryColor}4d`;
+      });
+      
+      document.querySelectorAll('.text-green-400').forEach(el => {
+        el.style.color = primaryColor;
+      });
+      
+      document.querySelectorAll('.bg-green-500\\/20').forEach(el => {
+        el.style.backgroundColor = `${primaryColor}33`;
+      });
+
+      document.querySelectorAll('.text-white').forEach(el => {
+        el.style.color = textColor;
+      });
+
+      document.querySelectorAll('.text-gray-400, .text-gray-300').forEach(el => {
+        el.style.color = secondaryColor;
+      });
+    }
+
+    // Initialize Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          updateUI(config);
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => window.elementSdk.setConfig({ background_color: value })
+            },
+            {
+              get: () => config.surface_color || defaultConfig.surface_color,
+              set: (value) => window.elementSdk.setConfig({ surface_color: value })
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => window.elementSdk.setConfig({ text_color: value })
+            },
+            {
+              get: () => config.primary_color || defaultConfig.primary_color,
+              set: (value) => window.elementSdk.setConfig({ primary_color: value })
+            },
+            {
+              get: () => config.secondary_color || defaultConfig.secondary_color,
+              set: (value) => window.elementSdk.setConfig({ secondary_color: value })
+            }
+          ],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['site_title', config.site_title || defaultConfig.site_title],
+          ['hero_subtitle', config.hero_subtitle || defaultConfig.hero_subtitle],
+          ['hero_tagline', config.hero_tagline || defaultConfig.hero_tagline],
+          ['server_ip', config.server_ip || defaultConfig.server_ip],
+          ['server_version', config.server_version || defaultConfig.server_version],
+          ['footer_text', config.footer_text || defaultConfig.footer_text]
+        ])
+      });
+    }
+
+    // Initial render
+    renderNews();
+    updateUI(defaultConfig);
+    accountManager.updatePlayerCount();
+    
+    // Show home section on load
+    document.getElementById('home-section').classList.add('active');
+  </script>
+  </div>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9da46d38a26b1cc8',t:'MTc3MzE2NzgwNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
